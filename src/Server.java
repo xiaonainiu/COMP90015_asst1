@@ -36,6 +36,9 @@ public class Server {
                     String inputStr = null;
                     String outputStr = null;
                     if ((inputStr = dis.readUTF())!=null){
+//                        Thread connection = new Thread(new MyTread());
+//                        connection.start();
+
                         System.out.println("From Client"+ s1.getInetAddress()+s1.getPort()+inputStr);
                         try{
 
@@ -146,6 +149,11 @@ public class Server {
         }
     }
 
+//    static class MyTread implements Runnable{
+//        public void run(){
+//            System.out.println("this thread is running");
+//        }
+//    }
 
 }
 
