@@ -13,14 +13,14 @@ public class Server {
     public static void main (String arg[]){
 
         System.out.println("**Server Start**");
-        Server server = new Server();
-        String fileName = "dictionary.txt";
-        File fileObject = new File(fileName);
-        Dictionary dictionary = null;
+//        Server server = new Server();
+//        String fileName = "dictionary.txt";
+//        File fileObject = new File(fileName);
+//        Dictionary dictionary = null;
 
 
-        InputStream s1in = null;
-        OutputStream s1out = null;
+//        InputStream s1in = null;
+//        OutputStream s1out = null;
         try {
             //Register service on port 1234
             ServerSocket ss = new ServerSocket(1234);
@@ -29,72 +29,76 @@ public class Server {
                 try{
                     Socket s1 = ss.accept(); // wait and accept a connection
 
-                    s1out = s1.getOutputStream();
-                    s1in = s1.getInputStream();
-                    DataOutputStream dos = new DataOutputStream(s1out);
-                    DataInputStream dis = new DataInputStream(s1in);
-                    String inputStr = null;
-                    String outputStr = null;
-                    if ((inputStr = dis.readUTF())!=null){
-//                        Thread connection = new Thread(new MyTread());
-//                        connection.start();
+                    Thread t = new Thread(new RequestThread(s1));
 
-                        System.out.println("From Client"+ s1.getInetAddress()+s1.getPort()+inputStr);
-                        try{
+                    t.start();
 
-                            //initialize dictionary
-                            if (server.checkFile(fileObject)){
-                                dictionary = new Dictionary(server.read());
-                            }else {
-                                dictionary = new Dictionary("");
-                            }
-
-
-                            String[] commandsplit = inputStr.split(",");
-                            switch (commandsplit[0]){
-                                case "add":
-                                    boolean addSuccess = false;
-                                    addSuccess = dictionary.addWord(commandsplit[1],commandsplit[2]);
-//                                    System.out.println("in Server, addSuccess is : "+ addSuccess);
-                                    if (addSuccess){
-                                        server.write(dictionary.getUpdateFile());
-                                        outputStr = "Add success";
-                                    }else {
-                                        outputStr = "The word is already exist";
-                                    }
-
-                                    break;
-                                case "search":
-                                    String explanation = dictionary.searchWord(commandsplit[1]);
-                                    if (explanation != null){
-                                        outputStr = "The explanation of is: "+explanation;
-                                    }else {
-                                        outputStr = "The word is not exist";
-                                    }
-
-                                    break;
-                                case "delete":
-                                    boolean deleteSuccess = dictionary.deleteWord(commandsplit[1]);
-                                    if (deleteSuccess){
-                                        server.write(dictionary.getUpdateFile());
-                                        outputStr = "Delete success";
-                                    }else {
-                                        outputStr = "The word is not exist";
-                                    }
-
-                                    break;
-                                default:
-                                    outputStr = "Invalid command";
-                                    System.out.println("User's command is invalid");
-                            }
-                        }catch (ArrayIndexOutOfBoundsException e){
-                            e.printStackTrace();
-                        }
-                    }
-                    dos.writeUTF("Hi there, your input is: "+ inputStr+"\n"+ "feedback is: "+outputStr);
-                    dos.close();
-                    s1out.close();
-                    s1.close();
+//                    s1out = s1.getOutputStream();
+//                    s1in = s1.getInputStream();
+//                    DataOutputStream dos = new DataOutputStream(s1out);
+//                    DataInputStream dis = new DataInputStream(s1in);
+//                    String inputStr = null;
+//                    String outputStr = null;
+//                    if ((inputStr = dis.readUTF())!=null){
+////                        Thread connection = new Thread(new MyTread());
+////                        connection.start();
+//
+//                        System.out.println("From Client"+ s1.getInetAddress()+s1.getPort()+inputStr);
+//                        try{
+//
+//                            //initialize dictionary
+//                            if (server.checkFile(fileObject)){
+//                                dictionary = new Dictionary(server.read());
+//                            }else {
+//                                dictionary = new Dictionary("");
+//                            }
+//
+//
+//                            String[] commandsplit = inputStr.split(",");
+//                            switch (commandsplit[0]){
+//                                case "add":
+//                                    boolean addSuccess = false;
+//                                    addSuccess = dictionary.addWord(commandsplit[1],commandsplit[2]);
+////                                    System.out.println("in Server, addSuccess is : "+ addSuccess);
+//                                    if (addSuccess){
+//                                        server.write(dictionary.getUpdateFile());
+//                                        outputStr = "Add success";
+//                                    }else {
+//                                        outputStr = "The word is already exist";
+//                                    }
+//
+//                                    break;
+//                                case "search":
+//                                    String explanation = dictionary.searchWord(commandsplit[1]);
+//                                    if (explanation != null){
+//                                        outputStr = "The explanation of is: "+explanation;
+//                                    }else {
+//                                        outputStr = "The word is not exist";
+//                                    }
+//
+//                                    break;
+//                                case "delete":
+//                                    boolean deleteSuccess = dictionary.deleteWord(commandsplit[1]);
+//                                    if (deleteSuccess){
+//                                        server.write(dictionary.getUpdateFile());
+//                                        outputStr = "Delete success";
+//                                    }else {
+//                                        outputStr = "The word is not exist";
+//                                    }
+//
+//                                    break;
+//                                default:
+//                                    outputStr = "Invalid command";
+//                                    System.out.println("User's command is invalid");
+//                            }
+//                        }catch (ArrayIndexOutOfBoundsException e){
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                    dos.writeUTF("Hi there, your input is: "+ inputStr+"\n"+ "feedback is: "+outputStr);
+//                    dos.close();
+//                    s1out.close();
+//                    s1.close();
                 }catch (EOFException e){
                     System.out.println("Client has closed");
                 }
@@ -149,11 +153,91 @@ public class Server {
         }
     }
 
-//    static class MyTread implements Runnable{
-//        public void run(){
-//            System.out.println("this thread is running");
-//        }
-//    }
+    static class RequestThread implements Runnable{
+        private Socket s1;
+
+        RequestThread(Socket socket){
+            this.s1 = socket;
+        }
+
+        public void run(){
+            try{
+                Server server = new Server();
+                String fileName = "dictionary.txt";
+                File fileObject = new File(fileName);
+                Dictionary dictionary = null;
+
+                OutputStream s1out = s1.getOutputStream();
+                InputStream s1in = s1.getInputStream();
+                DataOutputStream dos = new DataOutputStream(s1out);
+                DataInputStream dis = new DataInputStream(s1in);
+                String inputStr = null;
+                String outputStr = null;
+                if ((inputStr = dis.readUTF())!=null){
+//                        Thread connection = new Thread(new MyTread());
+//                        connection.start();
+
+                    System.out.println("From Client"+ s1.getInetAddress()+s1.getPort()+inputStr);
+                    try{
+
+                        //initialize dictionary
+                        if (server.checkFile(fileObject)){
+                            dictionary = new Dictionary(server.read());
+                        }else {
+                            dictionary = new Dictionary("");
+                        }
+
+
+                        String[] commandsplit = inputStr.split(",");
+                        switch (commandsplit[0]){
+                            case "add":
+                                boolean addSuccess = false;
+                                addSuccess = dictionary.addWord(commandsplit[1],commandsplit[2]);
+//                                    System.out.println("in Server, addSuccess is : "+ addSuccess);
+                                if (addSuccess){
+                                    server.write(dictionary.getUpdateFile());
+                                    outputStr = "Add success";
+                                }else {
+                                    outputStr = "The word is already exist";
+                                }
+
+                                break;
+                            case "search":
+                                String explanation = dictionary.searchWord(commandsplit[1]);
+                                if (explanation != null){
+                                    outputStr = "The explanation of is: "+explanation;
+                                }else {
+                                    outputStr = "The word is not exist";
+                                }
+
+                                break;
+                            case "delete":
+                                boolean deleteSuccess = dictionary.deleteWord(commandsplit[1]);
+                                if (deleteSuccess){
+                                    server.write(dictionary.getUpdateFile());
+                                    outputStr = "Delete success";
+                                }else {
+                                    outputStr = "The word is not exist";
+                                }
+
+                                break;
+                            default:
+                                outputStr = "Invalid command";
+                                System.out.println("User's command is invalid");
+                        }
+                    }catch (ArrayIndexOutOfBoundsException e){
+                        e.printStackTrace();
+                    }
+                }
+                dos.writeUTF("Hi there, your input is: "+ inputStr+"\n"+ "feedback is: "+outputStr);
+                dos.close();
+                s1out.close();
+                s1.close();
+            }catch (IOException e){
+                System.out.println("Client has closed");
+            }
+        }
+    }
 
 }
 
