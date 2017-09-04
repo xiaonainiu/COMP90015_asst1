@@ -30,7 +30,6 @@ public class DictionaryWindow {
                         Client.dos.writeUTF(command);
                     }else {
                         outputWord.setText("Invalid input");
-//                    gui.outputWord.append(str);
                     }
                 }catch (Exception ex){
                     ex.printStackTrace();
@@ -51,7 +50,6 @@ public class DictionaryWindow {
                         Client.dos.writeUTF(command);
                     }else {
                         outputWord.setText("Invalid input");
-//                    gui.outputWord.append(str);
                     }
                 }catch (Exception ex){
                     ex.printStackTrace();
@@ -70,7 +68,6 @@ public class DictionaryWindow {
                         Client.dos.writeUTF(command);
                     }else {
                         outputWord.setText("Invalid input");
-//                    gui.outputWord.append(str);
                     }
                 }catch (Exception ex){
                     ex.printStackTrace();

@@ -13,7 +13,6 @@ public class Server {
     public static void main (String arg[]){
         ServerWindow gui = new ServerWindow();
         gui.textArea1.append("**Server Start**");
-        System.out.println("**Server Start**");
         try {
             ServerSocket ss = new ServerSocket(1234);
 
@@ -26,13 +25,11 @@ public class Server {
                     t.start();
                 }catch (EOFException e){
                     gui.textArea1.append("\r\nClient has closed");
-                    System.out.println("Client has closed");
                 }
 
             }
         }catch (IOException e) {
             gui.textArea1.append("\r\ndictionary has been update");
-            System.out.println("dictionary has been update");
             e.printStackTrace();
         }
     }
@@ -115,13 +112,11 @@ public class Server {
                             dictionary = new Dictionary("");
                         }
 
-
                         String[] commandsplit = inputStr.split(",");
                         switch (commandsplit[0]){
                             case "add":
                                 boolean addSuccess = false;
                                 addSuccess = dictionary.addWord(commandsplit[1],commandsplit[2]);
-//                                    System.out.println("in Server, addSuccess is : "+ addSuccess);
                                 if (addSuccess){
                                     server.write(dictionary.getUpdateFile());
                                     outputStr = "Add success!";

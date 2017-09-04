@@ -25,11 +25,7 @@ public class Client {
                 String str = null;
                 if ((str = dis.readUTF()) !=null){
                     System.out.println(str);
-//                    System.out.println("**before append**");
-//                    gui.outputWord.setText("");
-//                    gui.outputWord.append(str);
                     gui.outputWord.setText(str);
-//                    System.out.println("**after append**");
                 }
                 dis.close();
                 s1.close();
