@@ -5,7 +5,9 @@
 import java.awt.*;
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+//import DictionaryClient.src.*;
 import java.util.*;
 
 public class Client {
@@ -34,6 +36,9 @@ public class Client {
             }
         }catch (UnknownHostException e){
             e.printStackTrace();
+        }catch (SocketException e){
+            gui.outputWord.setText("Server has been closed");
+            gui.unable();
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -51,7 +56,6 @@ public class Client {
                         System.out.println("Invalid input");
                         return false;
                     }
-//                    break;
                 case "search":
                     if (commandsplit.length == 2) {
                         return true;
@@ -59,7 +63,6 @@ public class Client {
                         System.out.println("Invalid input");
                         return false;
                     }
-//                    break;
                 case "delete":
                     if (commandsplit.length == 2) {
                         return true;
@@ -67,16 +70,6 @@ public class Client {
                         System.out.println("Invalid input");
                         return false;
                     }
-//                    break;
-                case "close":
-                    if (commandsplit.length == 1) {
-                        System.exit(0);
-                        return true;
-                    } else {
-                        System.out.println("Invalid input");
-                        return false;
-                    }
-//                    break;
                 default:
                     System.out.println("Invalid input");
                     return false;
@@ -85,6 +78,9 @@ public class Client {
             e.printStackTrace();
             return false;
         }
+    }
+    public static void close(){
+        System.exit(0);
     }
 }
 

@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+//import DictionaryClient.src.*;
 
 /**
  * Created by es on 2017/9/4.
@@ -76,15 +77,23 @@ public class DictionaryWindow {
                 }
             }
         });
+        close_bt.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                Client.close();
+            }
+        });
     }
 
-//    public void start() {
-//        JFrame frame = new JFrame("DictionaryWindow");
-//        frame.setContentPane(this.mainPanel);
-//        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//        frame.pack();
-//        frame.setVisible(true);
-//    }
+    public void unable(){
+        inputWord.setEnabled(false);
+        outputWord.setEnabled(false);
+        query_bt.setEnabled(false);
+        add_bt.setEnabled(false);
+        delete_bt.setEnabled(false);
+    }
+
     private JTextField inputWord;
     public JTextArea outputWord;
     private JButton query_bt;
@@ -92,4 +101,5 @@ public class DictionaryWindow {
     private JButton delete_bt;
     private JScrollPane scroll;
     private JPanel mainPanel;
+    private JButton close_bt;
 }

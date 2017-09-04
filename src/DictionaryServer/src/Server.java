@@ -11,7 +11,8 @@ import javax.net.ServerSocketFactory;
 
 public class Server {
     public static void main (String arg[]){
-
+        ServerWindow gui = new ServerWindow();
+        gui.textArea1.append("**Server Start**");
         System.out.println("**Server Start**");
         try {
             ServerSocket ss = new ServerSocket(1234);
@@ -20,15 +21,17 @@ public class Server {
                 try{
                     Socket s1 = ss.accept(); // wait and accept a connection
 
-                    Thread t = new Thread(new RequestThread(s1));
+                    Thread t = new Thread(new RequestThread(s1,gui));
 
                     t.start();
                 }catch (EOFException e){
+                    gui.textArea1.append("\r\nClient has closed");
                     System.out.println("Client has closed");
                 }
 
             }
         }catch (IOException e) {
+            gui.textArea1.append("\r\ndictionary has been update");
             System.out.println("dictionary has been update");
             e.printStackTrace();
         }
@@ -78,9 +81,11 @@ public class Server {
 
     static class RequestThread implements Runnable{
         private Socket s1;
+        private ServerWindow gui;
 
-        RequestThread(Socket socket){
+        RequestThread(Socket socket,ServerWindow gui){
             this.s1 = socket;
+            this.gui = gui;
         }
 
         public void run(){
@@ -97,6 +102,8 @@ public class Server {
                 String inputStr = null;
                 String outputStr = null;
                 if ((inputStr = dis.readUTF())!=null){
+
+                    gui.textArea1.append("\r\nFrom Client IP: "+ s1.getInetAddress()+" port: "+s1.getPort()+" command "+inputStr);
 
                     System.out.println("From Client"+ s1.getInetAddress()+s1.getPort()+inputStr);
                     try{
@@ -155,9 +162,14 @@ public class Server {
                 s1out.close();
                 s1.close();
             }catch (IOException e){
+                gui.textArea1.append("\r\nFrom Client IP: "+ s1.getInetAddress()+" port: "+s1.getPort()+" has closed");
                 System.out.println("Client has closed");
             }
         }
+    }
+
+    public static void close(){
+        System.exit(0);
     }
 
 }
