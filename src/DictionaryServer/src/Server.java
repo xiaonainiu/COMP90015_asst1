@@ -52,13 +52,13 @@ public class Server {
             b = (String) inputStream.readObject();
             inputStream.close();
         } catch (FileNotFoundException e) {
-            System.out.println("Cannot find file dictionary.txt");
+            System.out.println("Cannot find file dictionary");
             System.exit(0);
         } catch (ClassNotFoundException e) {
-            System.out.println("Problems with file input.");
+            System.out.println("Problems with file input");
             System.exit(0);
         } catch (IOException e) {
-            System.out.println("Problems with file input.");
+            System.out.println("Problems with file input");
             System.exit(0);
         }
         return b;
@@ -71,7 +71,7 @@ public class Server {
             outputStream.writeObject(a);
             outputStream.close();
         } catch (IOException e) {
-            System.out.println("Error writing to file.");
+            System.out.println("Error writing to file");
             System.exit(0);
         }
     }
@@ -149,6 +149,7 @@ public class Server {
                                 System.out.println("User's command is invalid");
                         }
                     }catch (ArrayIndexOutOfBoundsException e){
+                        outputStr = "Invalid command";
                         e.printStackTrace();
                     }
                 }

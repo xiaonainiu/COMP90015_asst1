@@ -7,7 +7,6 @@ import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-//import DictionaryClient.src.*;
 import java.util.*;
 
 public class Client {
@@ -31,6 +30,7 @@ public class Client {
                 s1.close();
             }
         }catch (UnknownHostException e){
+            gui.outputWord.setText("Cannot find the socket host");
             e.printStackTrace();
         }catch (SocketException e){
             gui.outputWord.setText("Server has been closed");
